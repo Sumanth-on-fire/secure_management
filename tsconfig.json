@@ -1,0 +1,16 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+    "sourceMap": false,
+    "jsx": "react-jsx",
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "../../dist/out-tsc",
+    "allowJs": false,
+    "types": ["cypress", "node"],
+    "baseUrl": "./",
+    "paths": {
+    "*": ["src/*"]
+        }
+    }
+  }
