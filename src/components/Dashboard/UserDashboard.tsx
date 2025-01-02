@@ -15,7 +15,7 @@ import {getUserProfile} from "../../api/user"
 import PasswordInputWithEyeIcon from '../../common/muiItems/PasswordTextField'
 import {updatePassword} from "../../api/auth"
 import SnackBarComponent from "../../common/muiItems/Snackbar";
-import {fieldVal,passwordVal,snackbarContent} from "../../common/enum.js";
+import {fieldEnum,passwordEnum,snackbarEnum} from "../../common/enum.js";
 
 const UserDashboard: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -107,7 +107,7 @@ const UserDashboard: React.FC = () => {
     const myIpAdd = await fetchUserIP()
     try {
       await axiosInstance.put(`/user/profile/${field}`, {
-        email: currData[fieldVal['email']],
+        email: currData[fieldEnum['email']],
         [`new_${field}`]: editData[field],
         ip_address: myIpAdd
       });
@@ -115,7 +115,7 @@ const UserDashboard: React.FC = () => {
       setFormData((prev) => ({ ...prev, [field]: editData[field] }));
       setMessage(`${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully.`);
     } catch (error) {
-      if(field==='email') localStorage.setItem('email', currData[fieldVal[field]])
+      if(field==='email') localStorage.setItem('email', currData[fieldEnum[field]])
       console.error(`Error updating ${field}:`, error);
       setMessage(`Failed to update ${field}.`);
     } finally {
@@ -142,8 +142,8 @@ const UserDashboard: React.FC = () => {
       )}
       <Grid container spacing={3} justifyContent="center">
         {/* Email Section */}
-        <SnackBarComponent openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} content={snackbarContent.passwordFailed}/>
-        <SnackBarComponent openSnackbar={openSnackbar1} setOpenSnackbar={setOpenSnackbar1} content={snackbarContent.passwordSuccess}/>
+        <SnackBarComponent openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} content={snackbarEnum.passwordFailed}/>
+        <SnackBarComponent openSnackbar={openSnackbar1} setOpenSnackbar={setOpenSnackbar1} content={snackbarEnum.passwordSuccess}/>
         <Grid item xs={12} sm={6}>
           <Card
             sx={{
@@ -299,7 +299,7 @@ const UserDashboard: React.FC = () => {
                 // helperText={`Current: ${formData.phoneNumber}`}
                 sx={{ mt: 1, mb: 1.8 }}
               /> */}
-              <PasswordInputWithEyeIcon textLabel={passwordVal.currPassword} password={currentPassword} handlePasswordChange={handleCurrentPasswordChange}/>
+              <PasswordInputWithEyeIcon textLabel={passwordEnum.currPassword} name={passwordEnum.currPassword} password={currentPassword} handlePasswordChange={handleCurrentPasswordChange}/>
                {/* <TextField
                 fullWidth
                 label="New Password"
@@ -309,7 +309,7 @@ const UserDashboard: React.FC = () => {
                 // helperText={`Current: ${formData.phoneNumber}`}
                 sx={{ mt: 1, mb: 1}}
               /> */}
-              <PasswordInputWithEyeIcon textLabel={passwordVal.newPassword} password={newPassword} handlePasswordChange={handleNewPasswordChange} />
+              <PasswordInputWithEyeIcon textLabel={passwordEnum.newPassword} name={passwordEnum.newPassword} password={newPassword} handlePasswordChange={handleNewPasswordChange} />
               <Button
                 variant="contained"
                 sx={{

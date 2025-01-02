@@ -5,7 +5,14 @@ import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-const PasswordInputWithEyeIcon = ({textLabel, password, handlePasswordChange}) => {
+interface IPasswordInputWithEyeIcon{
+  textLabel: string,
+  name: string,
+  password ?: string,
+  handlePasswordChange: () => void
+}
+
+const PasswordInputWithEyeIcon = ({textLabel, name, password, handlePasswordChange}: IPasswordInputWithEyeIcon) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleTogglePasswordVisibility = () => {
@@ -15,12 +22,14 @@ const PasswordInputWithEyeIcon = ({textLabel, password, handlePasswordChange}) =
   return (
     <TextField
       label={textLabel}
+      name={name}
       type={showPassword ? "text" : "password"}
       variant="outlined"
       fullWidth
       placeholder="Enter your password"
       value={password}
       onChange={handlePasswordChange}
+      onInput={handlePasswordChange}
       sx={{ mt: 1, mb: 1.8 }}
       InputProps={{
         endAdornment: (

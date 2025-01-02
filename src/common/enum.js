@@ -1,15 +1,17 @@
-export const fieldVal = Object.freeze({
+export const fieldEnum = Object.freeze({
     email: 'current_email',
     address: 'current_address',
     phoneNumber: 'current_phone'
 })
 
-export const passwordVal = Object.freeze({
-    currPassword: 'Current Password',
-    newPassword: "New Password"
+export const passwordEnum = Object.freeze({
+    currPassword: "Current Password",
+    newPassword: "New Password",
+    confirmPassword: "Confirm Password",
+    password: "Password"
 })
 
-export const snackbarContent = Object.freeze({
+export const snackbarEnum = Object.freeze({
     passwordFailed: 'Password update failed. Please try again!',
     passwordSuccess: 'Password update success !'
 })
