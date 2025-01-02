@@ -14,3 +14,8 @@ export const updatePassword = async (userData) => {
   const response = await axiosInstance.post('/auth/updatepassword', userData)
   return response.data
 }
+
+export const logout = async (userData) => {
+  const response =  await axiosInstance.post('/auth/logout', userData)
+  return response.data
+}

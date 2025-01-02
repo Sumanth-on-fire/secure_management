@@ -36,8 +36,9 @@ const Login = () => {
             fullWidth
             margin="normal"
             name="username"
-            label="Username"
+            label="Username / Email"
             onChange={handleInputChange}
+            onInput={handleInputChange} 
           />
           <TextField
             fullWidth
@@ -46,6 +47,7 @@ const Login = () => {
             label="Password"
             type="password"
             onChange={handleInputChange}
+            onInput={handleInputChange} 
           />
           {error && <Typography color="error">{error}</Typography>}
           <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>

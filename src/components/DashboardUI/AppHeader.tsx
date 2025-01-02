@@ -3,17 +3,38 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { CircularProgress } from '@mui/material';
+import { Button, CircularProgress, Popover } from '@mui/material';
+import {logout} from '../../api/auth'
+import { useNavigate } from 'react-router-dom';
+import { fetchUserIP} from '../../common/ipAddress'
 
 const AppHeader = () => {
 
   const [userName, setUserName] = useState('')
+  const [openpop, setOpenpop] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(()=>{
     setTimeout(() => {
         setUserName(localStorage.getItem('userName'))
     }, 2000);
   }, [])
+
+  const handleLogOut = async () => {
+    await logout({username: localStorage.getItem('email'), ip_address: await fetchUserIP()})
+    navigate('/')
+  }
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget); // Open the popover
+    setOpenpop(true)
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null); // Close the popover
+    setOpenpop(false)
+  };
   return (
     <AppBar
       position="static"
@@ -49,7 +70,9 @@ const AppHeader = () => {
               fontSize: '1.1rem',
               fontFamily: "'Roboto', sans-serif",
               color: '#ffffff',
+              cursor:'pointer'
             }}
+            onClick={handleClick}
           >
             {
             userName ? 
@@ -57,6 +80,35 @@ const AppHeader = () => {
             : <CircularProgress style={{ color: 'white', fontSize:'6px' }}/>
             }
           </Typography>
+          <Popover
+        open={openpop}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+            <Button
+              onClick={handleLogOut}
+              variant="contained"
+              size='small'
+              sx={{
+                // margin: "10px",
+                backgroundColor: "brown", // Set the button color to dark brown
+                "&:hover": {
+                  backgroundColor: "#5D3A1A", // A darker shade of brown for the hover effect
+                },
+                textTransform: 'none'
+              }}
+            >
+              Log out
+            </Button>
+      </Popover>
         </Box>
       </Toolbar>
     </AppBar>

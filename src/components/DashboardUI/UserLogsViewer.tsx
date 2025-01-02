@@ -22,6 +22,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import * as XLSX from "xlsx";
 import { getAllUsers, updateUserRoleStatus } from "../../api/admin";
 import { getUserActivityLogsByEmail } from "../../api/activityLogs";
+import { convertToIST } from '../../common/common'
 
 const UserLogsViewer = () => {
   const [users, setUsers] = useState([]);
@@ -234,7 +235,7 @@ const UserLogsViewer = () => {
                                 <TableRow key={index}>
                                   <TableCell>{log.action}</TableCell>
                                   <TableCell>{log.ip_address}</TableCell>
-                                  <TableCell>{log.timestamp}</TableCell>
+                                  <TableCell>{convertToIST(new Date(log.timestamp).toLocaleString())}</TableCell>
                                 </TableRow>
                               ))}
                             </TableBody>

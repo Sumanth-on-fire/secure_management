@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {fetchActivityLogs, clearAllActivity, clearActivityById} from '../../api/activityLogs.js'
-// import clearAllActivity from '../../api/activityLogs.js'
+import { convertToIST } from '../../common/common'
 
 const DataAndPrivacy = (props) => {
   const [history, setHistory] = useState([]);
@@ -40,7 +40,7 @@ const DataAndPrivacy = (props) => {
           id: log.id, // Unique ID for rendering
           action: log.action,
           ip: log.ip_address,
-          timestamp: new Date(log.timestamp).toLocaleString(), // Format timestamp
+          timestamp: convertToIST(new Date(log.timestamp).toLocaleString()), // Format timestamp
         }));
         setHistory(formattedLogs);
       } catch (error) {
