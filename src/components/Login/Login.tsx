@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Box, Link } from '@mui/material';
 import { login } from '../../api/auth';
+import {fetchUserIP} from '../../common/ipAddress'
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [credentials, setCredentials] = useState({ username: '', password: '', ip_address: ''});
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  const handleInputChange = async (e) => {
+    const ipAdd = await fetchUserIP()
+    setCredentials({ ...credentials, [e.target.name]: e.target.value, ip_address: ipAdd.toLocaleString()});
   };
 
   const handleSubmit = async (e) => {

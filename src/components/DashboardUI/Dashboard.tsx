@@ -8,14 +8,18 @@ import AppHeader from "./AppHeader";
 import AdminControls from "./AdminControls";
 import UserLogsViewer from "./UserLogsViewer"
 import {exportLogs} from '../../api/admin.js'
+import {getUserProfile} from "../../api/user"
 
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Personal information");
   const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(()=>{
-    const role = localStorage.getItem('role')
-    setIsAdmin(role==="Admin")
+    getUserProfile(localStorage.getItem('email')).then((response)=>{
+      const {role} = response
+      localStorage.setItem('role', role)
+      setIsAdmin(role==="Admin")
+    })
   }, [])
 
   const handleExport = async () => {

@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Box, Link } from '@mui/material';
 import { signup } from '../../api/auth';
-import { Link as RouterLink } from 'react-router-dom';
+import { fetchUserIP } from '../../common/ipAddress'
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 const Signup = () => {
-  const [userData, setUserData] = useState({ username: '', email: '', password: '' });
+  const [userData, setUserData] = useState({ username: '', email: '', password: '', ip_address: ''});
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate()
 
-  const handleInputChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+  const handleInputChange = async (e) => {
+    const ipAdd = await fetchUserIP()
+    setUserData({ ...userData, [e.target.name]: e.target.value, ip_address: ipAdd.toLocaleString() });
   };
 
   const handleSubmit = async (e) => {
@@ -50,7 +53,7 @@ const Signup = () => {
             onChange={handleInputChange}
           />
           {error && <Typography color="error">{error}</Typography>}
-          {success && <Typography color="success">Signup Successful!</Typography>}
+          {success && navigate('/') && <Typography color="success">Signup Successful!</Typography> }
           <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
             Signup
           </Button>

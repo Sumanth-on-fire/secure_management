@@ -12,10 +12,18 @@ import {
 import axiosInstance from "../../api/axiosInstance";
 import {fetchUserIP} from "../../common/ipAddress"
 import {getUserProfile} from "../../api/user"
+import PasswordInputWithEyeIcon from '../../common/muiItems/PasswordTextField'
+import {updatePassword} from "../../api/auth"
+import SnackBarComponent from "../../common/muiItems/Snackbar";
+import {fieldVal,passwordVal,snackbarContent} from "../../common/enum.js";
 
 const UserDashboard: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [currentPassword, setCurrentPassword] = useState<string | null>("")
+  const [newPassword, setNewPassword] = useState<string | null>("")
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false)
+  const [openSnackbar1, setOpenSnackbar1] = useState<boolean>(false)
   const [formData, setFormData] = useState({
     email: "",
     address: "",
@@ -31,19 +39,15 @@ const UserDashboard: React.FC = () => {
     current_address: "",
     current_phone: "",
   })
-  const fieldVal = Object.freeze({
-    email: 'current_email',
-    address: 'current_address',
-    phoneNumber: 'current_phone'
-  })
 
   useEffect(() => {
     const fetchProfile = async () => {
       setLoading(true);
       try {
         const response = await getUserProfile(localStorage.getItem('email'))
-        const { email, address, phone_number, username } = response;
+        const { email, address, phone_number, username, role } = response;
         localStorage.setItem('userName', username)
+        localStorage.setItem('role', role)
         setFormData({
           email,
           address: address || "No address available",
@@ -74,6 +78,29 @@ const UserDashboard: React.FC = () => {
     const { name, value } = e.target;
     setEditData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleCurrentPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentPassword(e.target.value)
+  }
+
+  const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewPassword(e.target.value)
+  }
+
+  const handleUpdatePassword = async () => {
+    try{
+      const isUpdated = await updatePassword({email: localStorage.getItem('email'), current_password: currentPassword, new_password: newPassword})
+      if(isUpdated){
+        setOpenSnackbar1(true)
+      }
+      else{
+        setOpenSnackbar(true)
+      }
+    }
+    catch(e){
+      setOpenSnackbar(true)
+    }
+  }
 
   const handleUpdate = async (field: "email" | "address" | "phoneNumber") => {
     setLoading(true);
@@ -115,6 +142,8 @@ const UserDashboard: React.FC = () => {
       )}
       <Grid container spacing={3} justifyContent="center">
         {/* Email Section */}
+        <SnackBarComponent openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} content={snackbarContent.passwordFailed}/>
+        <SnackBarComponent openSnackbar={openSnackbar1} setOpenSnackbar={setOpenSnackbar1} content={snackbarContent.passwordSuccess}/>
         <Grid item xs={12} sm={6}>
           <Card
             sx={{
@@ -201,7 +230,7 @@ const UserDashboard: React.FC = () => {
           </Card>
         </Grid>
         {/* Address Section (Moved here for more space) */}
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
           <Card
             sx={{
               borderRadius: 3,
@@ -239,6 +268,60 @@ const UserDashboard: React.FC = () => {
                 disabled={loading}
               >
                 {`Update Address`}
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+        {/* Change password */}
+        <Grid item xs={12} sm={6}>
+          <Card
+            sx={{
+              borderRadius: 3,
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              background: "white",
+              "&:hover": { transform: "scale(1.02)", transition: "0.3s" },
+            }}
+          >
+            <CardContent>
+              <Typography
+                variant="h6"
+                sx={{ color: "#37474f", fontWeight: "bold", mb: 2 }}
+              >
+                Change Password
+              </Typography>
+              {/* <TextField
+                fullWidth
+                type="password"
+                label="Current Password"
+                value={currentPassword}
+                name="currentPassword"
+                onChange={handleCurrentPasswordChange}
+                // helperText={`Current: ${formData.phoneNumber}`}
+                sx={{ mt: 1, mb: 1.8 }}
+              /> */}
+              <PasswordInputWithEyeIcon textLabel={passwordVal.currPassword} password={currentPassword} handlePasswordChange={handleCurrentPasswordChange}/>
+               {/* <TextField
+                fullWidth
+                label="New Password"
+                value={newPassword}
+                name="newPassword"
+                onChange={handleNewPasswordChange}
+                // helperText={`Current: ${formData.phoneNumber}`}
+                sx={{ mt: 1, mb: 1}}
+              /> */}
+              <PasswordInputWithEyeIcon textLabel={passwordVal.newPassword} password={newPassword} handlePasswordChange={handleNewPasswordChange} />
+              <Button
+                variant="contained"
+                sx={{
+                  mt: 2,
+                  backgroundColor: "#00796b",
+                  "&:hover": { backgroundColor: "#004d40" },
+                }}
+                onClick={handleUpdatePassword}
+                disabled={loading}
+              >
+                {/* {loading ? <CircularProgress size={24} /> : `Update Phone Number`} */}
+                {`Update Password`}
               </Button>
             </CardContent>
           </Card>

@@ -9,3 +9,8 @@ export const signup = async (userData) => {
   const response = await axiosInstance.post('/auth/signup', userData);
   return response.data;
 };
+
+export const updatePassword = async (userData) => {
+  const response = await axiosInstance.post('/auth/updatepassword', userData)
+  return response.data
+}

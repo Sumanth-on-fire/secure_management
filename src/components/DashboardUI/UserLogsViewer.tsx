@@ -15,6 +15,7 @@ import {
   Collapse,
   Select,
   MenuItem,
+  CircularProgress,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -27,17 +28,19 @@ const UserLogsViewer = () => {
   const [openRows, setOpenRows] = useState({});
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [logsData, setLogsData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setIsLoading(true)
         const response = await getAllUsers();
+        setIsLoading(false)
         setUsers(response);
       } catch (err) {
         console.error("Failed to fetch users:", err);
       }
     };
-
     fetchUsers();
   }, []);
 
@@ -120,13 +123,31 @@ const UserLogsViewer = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography variant="h4">User Management with Logs</Typography>
-        <Button variant="contained" onClick={exportToExcel}>
-          Export to Excel
+      <div style={{ width: '100%', textAlign:'right'}}>
+        <Button
+          // variant="contained"
+          onClick={exportToExcel}
+          size="small"
+          style={{ background: ' #00796b', color: 'white', textTransform: 'none' }}
+          sx={{ paddingX: '10px', textAlign:'right' }}
+        >
+          Export Data
         </Button>
+      </div>
+      <Box sx={{ display: "flex", justifyContent: "space-around", mb: 2, width: '100%' }}>
+        <Typography variant="h4" sx={{ color: "#00796b"}}>User Management with Logs</Typography>
       </Box>
-      <Divider sx={{ my: 2 }} />
+      {/* <Divider sx={{ my: 2 }} /> */}
+      {
+        isLoading ? <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="50vh"
+        >
+          <CircularProgress style={{ color: 'red' }} />
+        </Box> 
+      : 
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -228,6 +249,7 @@ const UserLogsViewer = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      }
     </Box>
   );
 };
